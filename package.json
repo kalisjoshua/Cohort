@@ -1,0 +1,29 @@
+{
+  "author": {
+    "name": "Joshua T Kalis",
+    "email": "kalisjoshua@gmail.com",
+    "url": "http://joshuakalis.com"
+  },
+  "name": "doozer",
+  "description": "simple build system",
+  "version": "0.0.1",
+  "homepage": "https://github.com/kalisjoshua/doozer",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kalisjoshua/doozer.git"
+  },
+  "main": "lib/main.js",
+  "dependencies": {
+    "clean-css": "0.6*"
+  },
+  "devDependencies": {
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  },
+  "_npmUser": {
+    "name": "kalisjoshua",
+    "email": "kalisjoshua@gmail.com"
+  }
+}
