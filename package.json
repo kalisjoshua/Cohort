@@ -4,10 +4,10 @@
     "email": "kalisjoshua@gmail.com",
     "url": "http://joshuakalis.com"
   },
-  "name": "doozer",
+  "name": "cohort",
   "description": "simple build system",
   "version": "0.0.2",
-  "homepage": "https://github.com/kalisjoshua/doozer",
+  "homepage": "",
   "repository": {
     "type": "git",
     "url": ""
