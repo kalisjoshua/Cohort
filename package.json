@@ -6,7 +6,7 @@
   },
   "name": "cohort",
   "description": "simple build system",
-  "version": "0.0.2",
+  "version": "0.8.1",
   "homepage": "",
   "repository": {
     "type": "git",
