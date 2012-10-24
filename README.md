@@ -37,10 +37,15 @@ Here is a basic example of Cohort doing lint*/concat/min on some css and js.
       , "dist/js/app.js" : [
           "src/js/lib/events.js"
         , "src/js/init.js"
+        , "src/js/coffee/library.coffee"
         // ...
         ]
       }
     });
+
+The output of running this Cohort file will be the two files within the `dist` directory (`css/app.css` and `js/app.js`).
+
+Notice that Cohort doesn't care about the type of files that will be concat'ed together (e.g. the css file accepts: css, less, scss[, more coming]). *Cohort does not support sass syntax as `libsass` doesn't support it, since it is deprecated.* Cohort will also concat coffee files inline although this is an anti-pattern since coffee files should be compiled together for optimizations that the coffescript compiler will do; Cohort suggests using a `Cakefile` to compile before concating js files together.
 
 ## Use
 
