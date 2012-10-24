@@ -47,6 +47,22 @@ The output of running this Cohort file will be the two files within the `dist` d
 
 Notice that Cohort doesn't care about the type of files that will be concat'ed together (e.g. the css file accepts: css, less, scss[, more coming]). *Cohort does not support sass syntax as `libsass` doesn't support it, since it is deprecated.* Cohort will also concat coffee files inline although this is an anti-pattern since coffee files should be compiled together for optimizations that the coffescript compiler will do; Cohort suggests using a `Cakefile` to compile before concating js files together.
 
+To execute commands before and/or after the files have been compiled Cohort offers a few options.
+
+    cohort({
+      commands: [
+        "cake build"
+      ]
+
+      ,files: {/* .. */}
+
+      ,test: [
+        "mocha test"
+      ]
+    });
+
+Strings within the arrays are just commands that will be executed in the shell so will have access to installed libraries.
+
 ## Use
 
 The expected use case for Cohort is to help with development by easing the setup for new developers, and maintain consistency across all developers. Starting from scratch the steps should be:
