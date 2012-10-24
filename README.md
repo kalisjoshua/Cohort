@@ -21,7 +21,7 @@ Cohort is meant to be a companion to you and your chosen development environment
 
 Here is a basic example of Cohort doing lint*/concat/min on some css and js. 
 
- **Linting is only done on js files currently.
+ *Linting is only done on js files currently.
 
     var cohort = require("cohort");
 
