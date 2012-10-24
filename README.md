@@ -47,8 +47,7 @@ Here is a basic example of Cohort doing lint*/concat/min on some css and js.
 The expected use case for Cohort is to help with development by easing the setup for new developers, and maintain consistency across all developers. Starting from scratch the steps should be:
 
 1. Clone the repository
-2. Install npm dependencies
-2. 1. This is an unfortunate 'catch 22' fix since Cohort is an npm package that can't be used till it is downloaded.
+2. Install npm dependencies - this is an unfortunate 'catch 22' fix since Cohort is an npm package that can't be used till it is downloaded.
 3. Run `cohort init` (#winning)
 4. Start developing
 
