@@ -48,7 +48,7 @@ The expected use case for Cohort is to help with development by easing the setup
 
 1. Clone the repository
 2. Install npm dependencies
-  2.* This is an unfortunate 'catch 22' fix since Cohort is an npm package that can't be used till it is downloaded.
+   2.* This is an unfortunate 'catch 22' fix since Cohort is an npm package that can't be used till it is downloaded.
 3. Run `cohort init` (#winning)
 4. Start developing
 
