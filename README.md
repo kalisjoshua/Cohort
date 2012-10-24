@@ -23,26 +23,6 @@ Here is a basic example of Cohort doing lint*/concat/min on some css and js.
 
  *Linting is only done on js files currently.
 
-```js
-var cohort = require("cohort");
-
-cohort({
-  files: {
-    "dist/css/app.css" : [
-      "src/css/normalize.css"
-    , "src/less/grids.less"
-    , "src/scss/widgets.scss"
-    // ...
-    ]
-
-  , "dist/js/app.js" : [
-      "src/js/lib/events.js"
-    , "src/js/init.js"
-    // ...
-    ]
-  }
-});
-```
 
 ## Use
 
