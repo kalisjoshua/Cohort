@@ -24,7 +24,7 @@ Here is a basic example of Cohort doing lint*/concat/min on some css and js.
  *Linting is only done on js files currently.
 
     var cohort = require("cohort");
-    
+
     cohort.extend("less", "./signifer/less.js");
     cohort.extend("scss", "./signifer/scss.js");
     cohort.extend("styl", "./signifer/stylus.js");
@@ -77,7 +77,7 @@ To execute commands before and/or after the files have been compiled Cohort offe
       ]
       , [ // init
           "git submodule update --init --recursive"
-        , "npm install"
+        , "cd git_modules/jquery && grunt build" // example jquery build
         ]);
 
 Strings within the arrays are just commands that will be executed in the shell so will have access to installed libraries.
