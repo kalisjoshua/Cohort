@@ -89,10 +89,12 @@ The expected use case for Cohort is to help with development by easing the setup
 
 # Libraries Being Used
 
+* Chai - test assertion library
 * CoffeeScript (via Cake)
 * JSHint - static analysis and cyclomatic complexity
 * LibSass - CSS preprocessor
 * Less - CSS preprocessor
 * Mocha - unit testing
+* Stylus - CSS preprocessor
 * Uglify - compression
 
