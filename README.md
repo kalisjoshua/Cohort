@@ -25,23 +25,30 @@ Here is a basic example of Cohort doing lint*/concat/min on some css and js.
 
     var cohort = require("cohort");
 
-    cohort({
-      files: {
-        "dist/css/app.css" : [
-          "src/css/normalize.css"
-        , "src/less/grids.less"
-        , "src/scss/widgets.scss"
-        // ...
-        ]
+    cohort([
+        [ // files
+          ["dist/css/app.css", [
+              "src/less/libs.less"
+            , "src/sass/example.scss"
+            , "src/css/sample.css"
+            , "src/css/another.css"
+            ]]
 
-      , "dist/js/app.js" : [
-          "src/js/lib/events.js"
-        , "src/js/init.js"
-        , "src/js/coffee/library.coffee"
-        // ...
+          , ["dist/css/sass_libs.css", [
+              "src/sass/example.scss"
+            ]]
+
+          , ["dist/css/stylus_libs.css", [
+              "src/stylus/lib.styl"
+            ]]
+
+          , ["dist/js/app.js", [
+              "src/js/app.js"
+            , "dist/js/coffee_libs.js" // from Cake built file
+            , "src/js/lib/important.coffee" // inline compile of coffee file
+            ]]
         ]
-      }
-    });
+      ]);
 
 The output of running this Cohort file will be the two files within the `dist` directory (`css/app.css` and `js/app.js`).
 
@@ -49,17 +56,25 @@ Notice that Cohort doesn't care about the type of files that will be concat'ed t
 
 To execute commands before and/or after the files have been compiled Cohort offers a few options.
 
-    cohort({
-      commands: [
-        "cake build"
-      ]
+    cohort([
+      [ // pre-build
+          "cake -d dist/js -f coffee_libs bake"
+        ]
 
-      ,files: {/* .. */}
+      , [/*...*/] // files
 
-      ,test: [
-        "mocha test"
+      , [ // testing
+          "mocha"
+        ]
+
+      , [ // cleanup
+          "rm -rf dist/js/coffee_libs.js"
+        ]
       ]
-    });
+      , [ // init
+          "git submodule update --init --recursive"
+        , "npm install"
+        ]);
 
 Strings within the arrays are just commands that will be executed in the shell so will have access to installed libraries.
 
