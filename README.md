@@ -61,7 +61,7 @@ Notice that Cohort doesn't care about the type of files that will be concat'ed t
 To execute commands before and/or after the files have been compiled Cohort offers a few options.
 
     cohort([
-      banner // as a string, will be appended to all compiled files (optional)
+      banner // [string], will be prepended to all compiled files (optional)
       , [ // pre-build
           "cake -d dist/js -f coffee_libs bake"
         ]
