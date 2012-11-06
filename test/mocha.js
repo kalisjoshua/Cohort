@@ -10,6 +10,24 @@ var assert = require("chai").assert
 cohort.extend("less");
 cohort.logging(false);
 
+function diffFiles(file1, file2, msg) {
+  return assert.equal(fs.readFileSync(file1, "utf-8"), fs.readFileSync(file2, "utf-8"), msg);
+}
+
+function testFileThenRemove (file, done) {
+  return function () {
+    fs.stat(file, function (err, stat) {
+      if (err || !stat.isFile()) {
+        throw err || "Not a file.";
+      } else {
+        diffFiles(file, file + "x", "File should match example.");
+        cohort([["rm -f " + file]])();
+      }
+      done();
+    });
+  };
+}
+
 describe("cohort", function () {
   it("should have a function as an entry point", function () {
     assert(cohort, "cohort should exists");
@@ -33,47 +51,41 @@ describe("cohort", function () {
     });
   });
 
+  describe("CSS compilation", function () {
+    var file = fixt + "ui";
+
+    it("concatenates and minifies CSS files.", function (done) {
+      var css = file + ".css";
+
+      cohort([
+        [[css
+        , [file + ".menu.css"
+          , file + ".widgets.css"]]]
+        ], testFileThenRemove(css, done))();
+    });
+  });
+
   describe("LESS compilation", function () {
     var file = fixt + "less";
 
-    before(function (done) {
-      cohort([["rm -f " + file + ".css"]]
-        , cohort([
-          [[file + ".css"
-          , [file + ".less"]]]
-          ], done)
-      )();
-    });
-
     it("compiles a single LESS file.", function (done) {
-      fs.readFile(file + ".css", "utf-8", function (err) {
-        if (err) {
-          throw err;
-        } else {
-          cohort([["rm -f " + file + ".css"]], done)();
-        }
-      });
-    });
+      var css = file + ".css";
 
-    before(function (done) {
-      cohort([["rm -f " + file + "2.css"]]
-        , cohort([
-          [[file + "2.css"
-          , [file + ".less"
-            , file + "2.less"
-            , file + "3.less"]]]
-          ], done)
-      )();
+      cohort([
+        [[css
+        , [file + ".less"]]]
+        ], testFileThenRemove(css, done))();
     });
 
     it("compiles and concatenates many LESS files into one CSS file.", function (done) {
-      fs.readFile(file + "2.css", "utf-8", function (err, data) {
-        if (err) {
-          throw err;
-        } else {
-          cohort([["rm -f " + file + "2.css"]], done)();
-        }
-      });
+      var css = file + "2.css";
+
+      cohort([
+        [[css
+        , [file + ".less"
+          , file + "2.less"
+          , file + "3.less"]]]
+        ], testFileThenRemove(css, done))();
     });
     
   });
