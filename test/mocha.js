@@ -18,10 +18,10 @@ function testFileThenRemove (file, done) {
   return function () {
     fs.stat(file, function (err, stat) {
       if (err || !stat.isFile()) {
-        throw err || "Not a file.";
+        throw err || "Path '" + file + "' is not a file.";
       } else {
         diffFiles(file, file + "x", "File should match example.");
-        cohort([["rm -f " + file]])();
+        cohort([["rm -f " + file]])(); // compiled files should be deleted
       }
       done();
     });
@@ -65,6 +65,19 @@ describe("cohort", function () {
     });
   });
 
+  describe("JS compilation", function () {
+    var file = fixt + "app";
+
+    it("concatenate and uglify js files.", function (done) {
+      var js = file + ".js";
+
+      cohort([
+        [[js
+        , [file + ".lib.js"]]]
+        ], testFileThenRemove(js, done))();
+    });
+  });
+
   describe("LESS compilation", function () {
     var file = fixt + "less";
 
@@ -87,7 +100,6 @@ describe("cohort", function () {
           , file + "3.less"]]]
         ], testFileThenRemove(css, done))();
     });
-    
   });
 
 });
