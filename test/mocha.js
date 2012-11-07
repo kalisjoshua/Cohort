@@ -7,7 +7,10 @@ var assert = require("chai").assert
 
   , fixt   = "./test/fixtures/";
 
+cohort.extend("coffee");
 cohort.extend("less");
+cohort.extend("scss");
+cohort.extend("styl");
 cohort.logging(false);
 
 function diffFiles(file1, file2, msg) {
@@ -23,7 +26,7 @@ function testFileThenRemove (file, done) {
         diffFiles(file, file + "x", "File should match example.");
         cohort([["rm -f " + file]])(); // compiled files should be deleted
       }
-      done();
+      done && done();
     });
   };
 }
@@ -43,10 +46,15 @@ describe("cohort", function () {
     var file = fixt + "time.txt"
       , time = (new Date()).getTime();
 
+    function precision (num, p) {
+      return ~~(num / p);
+    }
+
     cohort([["echo " + time + " > " + file]])();
 
     fs.readFile(file, "utf-8", function (err, data) {
-      assert.equal(data.replace(/\s/g, ""), time, time + "should match data from the file.");
+      var trunc = 10; // sometimes read is a little slow and throws a false false for result based on timing
+      assert.equal(precision(data.replace(/\s/g, ""), trunc), precision(time, trunc), time + "should match data from the file.");
       done();
     });
   });
@@ -75,6 +83,37 @@ describe("cohort", function () {
         [[js
         , [file + ".lib.js"]]]
         ], testFileThenRemove(js, done))();
+    });
+  });
+
+  describe("Advanced config for parallel-ization.", function () {
+    var file = fixt + "app";
+
+    it("things should work the same as serial tests.", function (done) {
+      var called = false;
+
+      function sync () {
+        console.log("sync");
+        if (!called) {
+          called = true;
+        } else {
+          done();
+        }
+      }
+
+      cohort([["echo building"]], function () {
+
+        cohort([
+          [[fixt + "ui.css"
+          , [fixt + "ui.menu.css"
+            , fixt + "ui.widgets.css"]]]
+          ], testFileThenRemove(fixt + "ui.css", sync))();
+
+        cohort([
+          [[fixt + "app.js"
+          , [fixt + "app.lib.js"]]]
+          ], testFileThenRemove(fixt + "app.js", sync))();
+      })();
     });
   });
 
