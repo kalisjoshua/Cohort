@@ -9,8 +9,8 @@ Cohort is meant to be a companion to you and your chosen development environment
 ## Features
 
 * (optional) Perform initial project setup
-** git submodules download and build
-** npm dependencies
+ * git submodules download and build
+ * npm dependencies
 * Execute commands before the build starts
 * Lint files
 * Concatenate and Minify files
