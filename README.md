@@ -42,9 +42,9 @@ Here is a basic example of Cohort doing lint*/concat/min on some css and js.
 
     var cohort = require("cohort");
 
-    cohort.extend("less", "./signifer/less.js");
-    cohort.extend("scss", "./signifer/scss.js");
-    cohort.extend("styl", "./signifer/stylus.js");
+    cohort.extend("less");
+    cohort.extend("scss");
+    cohort.extend("styl");
 
     cohort([
         [ // files
@@ -74,7 +74,7 @@ Here is a basic example of Cohort doing lint*/concat/min on some css and js.
 
 The output of running this Cohort file will be the two files within the `dist` directory (`css/app.css` and `js/app.js`).
 
-Notice that Cohort doesn't care about the type of files that will be concat'ed together (e.g. the css file accepts: css, less, scss[, more coming]). *Cohort does not support sass syntax as `libsass` doesn't support it, since it is deprecated.* Cohort will also concat coffee files inline although this is an anti-pattern since coffee files should be compiled together for optimizations that the coffescript compiler will do; Cohort suggests using a `Cakefile` to compile before concating js files together.
+Notice that Cohort doesn't care about the type of files that will be concat'ed together (e.g. the css file accepts: css, less, scss[, more coming]). *Cohort does not support sass syntax as `libsass` doesn't support it, since it is deprecated.* Cohort will also concat coffee files inline although this is an anti-pattern since coffee files should be compiled together for optimizations that the coffescript compiler will do; Cohort suggests using a `Cakefile` to compile before concatenating js files together.
 
 To execute commands before and/or after the files have been compiled Cohort offers a few options.
 
@@ -107,8 +107,17 @@ The expected use case for Cohort is to help with development by easing the setup
 
 1. Clone the repository
 2. Install npm dependencies - this is an unfortunate 'catch 22' fix since Cohort is an npm package that can't be used till it is downloaded.
-3. Run `cohort init` (#winning)
+3. Run `./cohort.js init` (#winning)
 4. Start developing
+
+## Advanced Configuration
+
+By making use of the callback argument some tasks can be parallelized for speed; CSS and JS are not at all interdependent and should not ever be blocking for each other.
+
+    cohort([["echo 'Build started'"]], function () {
+      cohort([[css_files_config]])();
+      cohort([[javascript_files_config]])();
+      })();
 
 # Libraries Being Used
 
