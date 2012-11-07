@@ -8,9 +8,9 @@ Cohort is meant to be a companion to you and your chosen development environment
 
 ## Features
 
-* Perform initial project setup
-** (optionally) git submodules download and build
-** (optionally) npm dependencies
+* (optional) Perform initial project setup
+** git submodules download and build
+** npm dependencies
 * Execute commands before the build starts
 * Lint files
 * Concatenate and Minify files
@@ -52,7 +52,8 @@ Here is a basic example of Cohort doing lint*/concat/min on some css and js.
             , "src/js/lib/important.coffee" // inline compile of coffee file
             ]]
         ]
-      ]);
+      ])(); // notice the trailing parens to invoke the build,
+            // cohort returns a function by default to allow for chaining of proceedures
 
 The output of running this Cohort file will be the two files within the `dist` directory (`css/app.css` and `js/app.js`).
 
@@ -79,7 +80,7 @@ To execute commands before and/or after the files have been compiled Cohort offe
       , [ // init
           "git submodule update --init --recursive"
         , "cd git_modules/jquery && grunt build" // example jquery build
-        ]);
+        ])();
 
 Strings within the arrays are just commands that will be executed in the shell so will have access to installed libraries.
 
