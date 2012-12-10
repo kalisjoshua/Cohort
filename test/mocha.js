@@ -71,6 +71,17 @@ describe("cohort", function () {
           , file + ".widgets.css"]]]
         ], testFileThenRemove(css, done))();
     });
+
+    it("includes file banners from cohort config.", function (done) {
+      var css = file + ".banner.css";
+
+      cohort([
+        [["/* banners are awesome! */"
+          , css
+        , [file + ".menu.css"
+          , file + ".widgets.css"]]]
+        ], testFileThenRemove(css, done))();
+    });
   });
 
   describe("JS compilation", function () {
@@ -93,7 +104,7 @@ describe("cohort", function () {
       var called = false;
 
       function sync () {
-        console.log("sync");
+        // console.log("sync");
         if (!called) {
           called = true;
         } else {
@@ -138,6 +149,19 @@ describe("cohort", function () {
           , file + "2.less"
           , file + "3.less"]]]
         ], testFileThenRemove(css, done))();
+    });
+  });
+
+  describe("HTML 'processing'", function () {
+    var file = fixt + "html";
+
+    it("moves HTML files", function (done) {
+      var html = file + ".html";
+
+      cohort([
+          [[html
+          , [html.replace(".html", "x.html")]]]
+        ], testFileThenRemove(html, done))();
     });
   });
 
