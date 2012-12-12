@@ -17,17 +17,20 @@ function diffFiles(file1, file2, msg) {
   return assert.equal(fs.readFileSync(file1, "utf-8"), fs.readFileSync(file2, "utf-8"), msg);
 }
 
-function testFileThenRemove (file, done) {
+function testFileThenRemove (files, done) {
   return function () {
-    fs.stat(file, function (err, stat) {
-      if (err || !stat.isFile()) {
-        throw err || "Path '" + file + "' is not a file.";
-      } else {
-        diffFiles(file, file + "x", "File should match example.");
-        cohort([["rm -f " + file]])(); // compiled files should be deleted
-      }
-      done && done();
+    files
+      .forEach(function (file) {
+        fs.stat(file, function (err, stat) {
+          if (err || !stat.isFile()) {
+            throw err || "Path '" + file + "' is not a file.";
+          } else {
+            diffFiles(file, file + "x", "File should match example.");
+            cohort([["rm -f " + file]])(); // compiled files should be deleted
+          }
+        });
     });
+    done && done();
   };
 }
 
@@ -69,18 +72,18 @@ describe("cohort", function () {
         [[css
         , [file + ".menu.css"
           , file + ".widgets.css"]]]
-        ], testFileThenRemove(css, done))();
+        ], testFileThenRemove([css], done))();
     });
 
     it("includes file banners from cohort config.", function (done) {
       var css = file + ".banner.css";
 
       cohort([
-        [["/* banners are awesome! */"
+        [["/* banners are awesome! */\n"
           , css
         , [file + ".menu.css"
           , file + ".widgets.css"]]]
-        ], testFileThenRemove(css, done))();
+        ], testFileThenRemove([css], done))();
     });
   });
 
@@ -93,7 +96,7 @@ describe("cohort", function () {
       cohort([
         [[js
         , [file + ".lib.js"]]]
-        ], testFileThenRemove(js, done))();
+        ], testFileThenRemove([js], done))();
     });
   });
 
@@ -118,12 +121,12 @@ describe("cohort", function () {
           [[fixt + "ui.css"
           , [fixt + "ui.menu.css"
             , fixt + "ui.widgets.css"]]]
-          ], testFileThenRemove(fixt + "ui.css", sync))();
+          ], testFileThenRemove([fixt + "ui.css"], sync))();
 
         cohort([
           [[fixt + "app.js"
           , [fixt + "app.lib.js"]]]
-          ], testFileThenRemove(fixt + "app.js", sync))();
+          ], testFileThenRemove([fixt + "app.js"], sync))();
       })();
     });
   });
@@ -137,10 +140,10 @@ describe("cohort", function () {
       cohort([
         [[css
         , [file + ".less"]]]
-        ], testFileThenRemove(css, done))();
+        ], testFileThenRemove([css], done))();
     });
 
-    it("compiles and concatenates many LESS files into one CSS file.", function (done) {
+    it("compiles+concatenates many LESS files into one CSS file.", function (done) {
       var css = file + "2.css";
 
       cohort([
@@ -148,7 +151,66 @@ describe("cohort", function () {
         , [file + ".less"
           , file + "2.less"
           , file + "3.less"]]]
-        ], testFileThenRemove(css, done))();
+        ], testFileThenRemove([css], done))();
+    });
+
+    it("compiles+concatenates many LESS files into many CSS files with banners.", function (done) {
+      var css3 = file + "3.css"
+        , css4 = file + "4.css"
+        , css5 = file + "5.css";
+
+      cohort([
+        [["/* 3 */\n"
+        , css3
+        , [file + ".less"
+          , file + "2.less"]]]
+
+        , [["/* 4 */\n"
+        , css4
+        , [file + ".less"
+          , file + "3.less"]]]
+
+        , [["/* 5 */\n"
+        , css5
+        , [file + ".less"
+          , file + ".less"
+          , file + "2.less"
+          , file + "2.less"
+          , file + "3.less"
+          , file + "3.less"]]]
+        ], function () {
+          testFileThenRemove([css3, css4, css5], done)();
+        })();
+    });
+
+    it("compiles+concatenates many LESS files into many CSS files with banners (files grouped).", function (done) {
+      var css3 = file + "3.css"
+        , css4 = file + "4.css"
+        , css5 = file + "5.css";
+
+      cohort([
+        [// all files in one grouping
+          ["/* 3 */\n"
+          , css3
+          , [file + ".less"
+            , file + "2.less"]]
+
+          , ["/* 4 */\n"
+          , css4
+          , [file + ".less"
+            , file + "3.less"]]
+
+          , ["/* 5 */\n"
+          , css5
+          , [file + ".less"
+            , file + ".less"
+            , file + "2.less"
+            , file + "2.less"
+            , file + "3.less"
+            , file + "3.less"]]
+        ]], function () {
+          testFileThenRemove([css3, css4, css5], done)();
+        })();
     });
   });
 
@@ -161,7 +223,7 @@ describe("cohort", function () {
       cohort([
           [[html
           , [html.replace(".html", "x.html")]]]
-        ], testFileThenRemove(html, done))();
+        ], testFileThenRemove([html], done))();
     });
   });
 
