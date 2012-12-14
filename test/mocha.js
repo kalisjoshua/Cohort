@@ -49,17 +49,13 @@ describe("cohort", function () {
     var file = fixt + "time.txt"
       , time = (new Date()).getTime();
 
-    function precision (num, p) {
-      return ~~(num / p);
-    }
+    cohort([["echo " + time + " > " + file]], function () {
+      fs.readFile(file, "utf-8", function (err, data) {
+        assert.equal(data.match(/\d+/)[0], time, time + " should match " + data + " from the file.");
+        done();
+      });
+    })();
 
-    cohort([["echo " + time + " > " + file]])();
-
-    fs.readFile(file, "utf-8", function (err, data) {
-      var trunc = 10; // sometimes read is a little slow and throws a false false for result based on timing
-      assert.equal(precision(data.replace(/\s/g, ""), trunc), precision(time, trunc), time + "should match data from the file.");
-      done();
-    });
   });
 
   describe("CSS compilation", function () {
@@ -226,5 +222,17 @@ describe("cohort", function () {
         ], testFileThenRemove([html], done))();
     });
   });
+
+  // describe("functions in config", function () {
+  //   it("should execute in order", function (done) {
+  //     cohort([
+  //       function (tasks, fn, dn, acc) {
+  //         console.log("yay");
+  //         dn(acc);
+  //         done();
+  //       }
+  //     ])();
+  //   });
+  // });
 
 });
