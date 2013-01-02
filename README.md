@@ -4,24 +4,26 @@ Compiling files is tedious. Humans are bad at doing tedious things because we ge
 
 Cohort is an attempt to alleviate most of this work for the developer. Simply define the procedures to perform to achieve a complete build of a project. The focus of Cohort is the simplicity of the setup; no programming should be necessary by the developer, beyond what they would have to do without a tool such as Cohort. The goal is for Cohort to be a drop-in helper to most projects; if you are using a Cakefile for compiling your Coffeescript you wont need to duplicate any of that in Cohort because the Cakefile will just be executed by Cohort instead of you.
 
-    /*
-      Function:
-        cohort
+```javascript
+/*
+  Function:
+    cohort
 
-      Description:
-        Invoking `cohort` with arguments, builds a function and returns that function for later execution.
+  Description:
+    Invoking `cohort` with arguments, builds a function and returns that function for later execution.
 
-      Arguments:
-        @config   - all build information to be executed when creating a new build
-        @init     - only necessary to execute when starting development on the project new
-        @callback - function executed immediately before execution is complete
-    */
+  Arguments:
+    @config   - all build information to be executed when creating a new build
+    @init     - only necessary to execute when starting development on the project new
+    @callback - function executed immediately before execution is complete
+*/
 
-    // function returned, nothing is executed
-    cohort(config, init, callback);
+// function returned, nothing is executed
+cohort(config, init, callback);
 
-    // function returned and immediately executed
-    cohort(config, init, callback)();
+// function returned and immediately executed
+cohort(config, init, callback)();
+```
 
 ## Features
 
@@ -40,37 +42,39 @@ Here is a basic example of Cohort doing lint*/concat/min on some css and js.
 
 *Linting is only done on js files currently.
 
-    var cohort = require("cohort");
+```javascript
+var cohort = require("cohort");
 
-    cohort.extend("less");
-    cohort.extend("scss");
-    cohort.extend("styl");
+cohort.extend("less");
+cohort.extend("scss");
+cohort.extend("styl");
 
-    cohort([
-        [ // files
-          ["dist/css/app.css", [
-              "src/less/libs.less"
-            , "src/sass/example.scss"
-            , "src/css/sample.css"
-            , "src/css/another.css"
-            ]]
+cohort([
+  [ // files
+    ["dist/css/app.css", [
+        "src/less/libs.less"
+      , "src/sass/example.scss"
+      , "src/css/sample.css"
+      , "src/css/another.css"
+      ]]
 
-          , ["dist/css/sass_libs.css", [
-              "src/sass/example.scss"
-            ]]
+    , ["dist/css/sass_libs.css", [
+        "src/sass/example.scss"
+      ]]
 
-          , ["dist/css/stylus_libs.css", [
-              "src/stylus/lib.styl"
-            ]]
+    , ["dist/css/stylus_libs.css", [
+        "src/stylus/lib.styl"
+      ]]
 
-          , ["dist/js/app.js", [
-              "src/js/app.js"
-            , "dist/js/coffee_libs.js" // from Cake built file
-            , "src/js/lib/important.coffee" // inline compile of coffee file
-            ]]
-        ]
-      ])(); // notice the trailing parens to invoke the build,
-            // cohort returns a function by default to allow for chaining of proceedures
+    , ["dist/js/app.js", [
+        "src/js/app.js"
+      , "dist/js/coffee_libs.js" // from Cake built file
+      , "src/js/lib/important.coffee" // inline compile of coffee file
+      ]]
+  ]
+])(); // notice the trailing parens to invoke the build,
+      // cohort returns a function by default to allow for chaining of proceedures
+```
 
 The output of running this Cohort file will be the two files within the `dist` directory (`css/app.css` and `js/app.js`).
 
@@ -78,26 +82,28 @@ Notice that Cohort doesn't care about the type of files that will be concat'ed t
 
 To execute commands before and/or after the files have been compiled Cohort offers a few options.
 
-    cohort([
-      banner // [string], will be prepended to all compiled files (optional)
-      , [ // pre-build
-          "cake -d dist/js -f coffee_libs bake"
-        ]
+```javascript
+cohort([
+  banner // [string], will be prepended to all compiled files (optional)
+  , [ // pre-build
+      "cake -d dist/js -f coffee_libs bake"
+    ]
 
-      , [/*...*/] // files
+  , [/*...*/] // files
 
-      , [ // testing
-          "mocha"
-        ]
+  , [ // testing
+      "mocha"
+    ]
 
-      , [ // cleanup
-          "rm -rf dist/js/coffee_libs.js"
-        ]
-      ]
-      , [ // init
-          "git submodule update --init --recursive"
-        , "cd git_modules/jquery && grunt build" // example jquery build
-        ])();
+  , [ // cleanup
+      "rm -rf dist/js/coffee_libs.js"
+    ]
+  ]
+  , [ // init
+      "git submodule update --init --recursive"
+    , "cd git_modules/jquery && grunt build" // example jquery build
+    ])();
+```
 
 Strings within the arrays are just commands that will be executed in the shell so will have access to installed libraries.
 
@@ -114,10 +120,12 @@ The expected use case for Cohort is to help with development by easing the setup
 
 By making use of the callback argument some tasks can be parallelized for speed; CSS and JS are not at all interdependent and should not ever be blocking for each other.
 
-    cohort([["echo 'Build started'"]], function () {
-      cohort([[css_files_config]])();
-      cohort([[javascript_files_config]])();
-      })();
+```javascript
+cohort([["echo 'Build started'"]], function () {
+  cohort([[css_files_config]])();
+  cohort([[javascript_files_config]])();
+  })();
+```
 
 # Libraries Being Used
 
@@ -129,4 +137,3 @@ By making use of the callback argument some tasks can be parallelized for speed;
 * Mocha - unit testing
 * Stylus - CSS preprocessor
 * Uglify - compression
-
